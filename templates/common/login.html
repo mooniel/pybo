@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+  </head>
+  <body style=" background-color: #F5F5DC">
+  <nav class="navbar" style="background-color: #bfd1ec;">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'common:login' %}">G&G Service</a>
+    </div>
+</nav>
+<div class="container my-3" style="background-color: #F5F5DC;">
+    <div id="current_date" style="margin-top: 60px; text-align: end;">
+        <script>
+            date = new Date();
+            year = date.getFullYear();
+            month = date.getMonth() + 1;
+            day = date.getDate();
+            document.getElementById("current_date").innerHTML = year + "年" + month + "月" + day + "日";
+        </script>
+    </div>
+    <h2>ログイン</h2>
+    <div class="card" style="background-color: #bfd1ec;">
+         <div class="card-body">
+            <form method="post" action="{% url 'common:login' %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}">  <!-- 로그인 성공후 이동되는 URL -->
+                {% include "form_errors.html" %}
+                <div class="row" style="margin-top: 15px;">
+                    <div class="col-4" style="text-align: right; font-weight: bold;">
+                        <label for="username">Username</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="text" class="form-control" name="username" id="username"
+                               value="{{ form.username.value|default_if_none:'' }}">
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 15px;">
+                    <div class="col-4" style="text-align: right; font-weight: bold;">
+                        <label for="password">password</label>
+                    </div>
+                    <div class="col-4">
+                        <input type="password" class="form-control" name="password" id="password"
+                               value="{{ form.password.value|default_if_none:'' }}">
+                    </div>
+                </div>
+                <div class="lg-btn" style=" text-align: center; margin-top: 30px;">
+                    <button type="submit" class="btn btn-primary" style="background-color: #1869DB; border-color: #1869DB; color: white;">ログイン</button> <!--로그인-->
+                    <button type="button" class="btn btn-warning" style="background-color: #ff5733; border-color: #ff5733; color: white;" onclick="location.href='http://localhost:8000/common/signup/'" >新規登録</button> <!--회원가입-->
+                </div>
+            </form>
+        </div>
+        </br></br></br></br></br></br></br></br></br></br></br></br></br>
+    </div>
+</div>
+  </body>

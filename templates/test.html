@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <nav class="navbar bg-body-tertiary" data-bs-theme="dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+          GOMS
+        </a>
+      </div>
+    </nav>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page" href="#">ホーム</a> <!--홈-->
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">お知らせ管理</a> <!--공지사항관리-->
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="container text-center" style="margin-left: 0px;margin-right: 0px;">
+      <div class="row">
+        <div class="col-sm-2" style='background-color:white;'>
+          <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action ">お知らせ一覧</a>
+            <a href="#" class="list-group-item list-group-item-action active" aria-current="true" >お知らせ登録</a>
+          </div>
+        </div>
+        <div class="col-sm-10" style='background-color:skyblue;width:2100px;margin-left:250px;'>
+          <nav style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
+            <ol class="breadcrumb">
+              <li class="breadcrumb-item"><a href="#">ホーム</a></li>
+              <li class="breadcrumb-item active" aria-current="page">お知らせ管理</li>
+              <li class="breadcrumb-item active" aria-current="page">お知らせ登録</li>
+            </ol>
+          </nav>
+          <div style='text-align:left;'>
+            <h1>お知らせ登録</h1><!--공지등록-->
+          </div>
+          <div class="card">
+            <div class="card-body" style='background-color:white;'>
+                <div class="row gx-5">
+                    <div style='text-align:left;'>
+                        <h4 style='border-bottom:1px solid black; padding-bottom:5px'>基本情報</h4>
+                    </div>
+                    <div class="form-group">
+                        <div class="row" style="margin-top: 15px;">
+                            <div class="col-2" style="text-align: right; font-weight: bold;">
+                                <label for="title">タイトル</label>
+                            </div>
+                            <div class="col-1" style="text-align: center;">
+                                <span class="badge bg-danger">必須</span>
+                            </div>
+                            <div class="col-9">
+                                <div class="input-group flex-nowrap">
+                                    <input type="text" id="title" name="title" class="form-control" placeholder="タイトルを入力してください。"
+                                        aria-label="Username" aria-describedby="addon-wrapping"
+                                        style="margin-bottom: 15px;">
+                                </div>
+                                <span id="titleError" class="error-message" style="color: red;"></span>
+                            </div>
+                        </div>
+                        <!-- 공지타입 -->
+                        <div class="row" style="margin-top: 15px;">
+                            <div class="col-2" style="text-align: right; font-weight: bold;">
+                                <label>開方式</label>
+                            </div>
+                            <div class="col-1" style="text-align: center;">
+                                <span class="badge bg-danger">必須</span>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="public1" name="public">
+                                    <label class="form-check-label" for="public1">
+                                        時刻公開
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="public2" name="public">
+                                    <label class="form-check-label" for="public2">
+                                        すぐに公開
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" id="public3" name="public">
+                                    <label class="form-check-label" for="public3">
+                                        保留
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 등록일 -->
+                        <div class="row" style="margin-top: 15px;">
+                            <div class="col-2" style="text-align: right; font-weight: bold;">
+                                <label for="send-date">発信日</label>
+                            </div>
+                            <div class="col-1" style="text-align: center;">
+                                <span class="badge bg-danger">必須</span>
+                            </div>
+                            <div class="col-9">
+                                <input type="datetime-local" id="send-date" name="send-date" class="form-control" required>
+                            </div>
+                        </div>
+                        <!-- 만료일 -->
+                        <div class="row" style="margin-top: 15px;">
+                            <div class="col-2" style="text-align: right; font-weight: bold;">
+                                <label for="reserve-date">満了日</label>
+                            </div>
+                            <div class="col-9" style="margin-left:107px;">
+                                <input type="datetime-local" id="reserve-date" name="reserve-date" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 15px;">
+                      <div class="col-2" style="text-align: right; font-weight: bold; margin-left:12px;">
+                        <label for="send-date">プッシュ通知有無</label> <!--푸시알림-->
+                      </div>
+                      <div class="col-1" style="text-align: center;">
+                        <span class="badge bg-danger">必須</span>
+                      </div>
+                      <div class="col-2">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" id="push" name="push">
+                          <label class="form-check-label" for="flexRadioDefault1">
+                          通知する
+                          </label></div>
+                      </div>
+                      <div class="col-2">
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" id="push" name="push">
+                          <label class="form-check-label" for="flexRadioDefault1">
+                          通知しない
+                          </label></div>
+                      </div>
+                    </div>
+                    <div class="row" style="margin-top: 15px;">
+                      <div class="col-2" style="text-align: right; font-weight: bold; margin-left:12px;">
+                          <label for="description" style="width: 100px;">内容</label> <!--内容 入力-->
+                      </div>
+                      <div class="col-1" style="text-align: center;">
+                          <span class="badge bg-danger">必須</span>
+                      </div>
+                      <div class="col-8">
+                          <textarea class="form-control" id="notice" rows="3" placeholder="内容を入力してください。"></textarea>
+                      </div>
+                    </div>
+                  <div class="row" style="margin-top: 100px;">
+                    <div class="col-4" style="margin-left: 420px;">
+                      <button type="button" class="btn btn-danger">登録</button>
+                     <button type="button" class="btn btn-secondary">キャンセル</button>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </br>
+      </div>
+    </br>
+    </div>
+  </body>
+</html>

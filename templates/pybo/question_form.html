@@ -1,0 +1,219 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="nav nav-underline">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{% url 'pybo:index' %}">ホーム</a> <!--홈-->
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="#">お知らせ管理</a> <!--공지사항관리-->
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="row">
+        <div class="col-2">
+            <ul class="nav flex-column nav-pills nav-fill">
+                <li class="nav-item">
+                    <a class="nav-link " aria-current="page" href="{% url 'pybo:index' %}">お知らせ一覧</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="#">お知らせ登録</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-8">
+            <div class="container">
+                <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'pybo:index' %}">ホーム</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">お知らせ登録</li>
+                    </ol>
+                </nav>
+                <div style="text-align:left; margin-top: 30px;">
+                    <div id="current_date" style="margin-top: 50px; text-align: end;">
+                        <script>
+                            date = new Date();
+                            year = date.getFullYear();
+                            month = ('0' + (date.getMonth() + 1)).slice(-2); // 월이 한 자리 수일 때 앞에 0 추가
+                            day = ('0' + date.getDate()).slice(-2);
+                            document.getElementById("current_date").innerHTML = year + "年" + month + "月" + day + "日";
+                        </script>
+                    </div>
+                    <h1>お知らせ登録</h1><!--공지등록-->
+                </div>
+                <form method="post" class="post-form my-3" onsubmit="return confirmSubmit()">
+                    {% csrf_token %}
+                    <!-- 오류표시 Start -->
+                    {% if form.errors %}
+                    <div class="alert alert-danger" role="alert">
+                        {% for field in form %}
+                        {% if field.errors %}
+                        <div>
+                            <strong>{{ field.label }}</strong>
+                            {{ field.errors }}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <!-- 오류표시 End -->
+                    <div class="card" >
+                        <div class="card-body">
+                            <div class="form-group">
+                                <div class="row" style="margin-top: 15px;">
+                                    <div class="col-3" style="text-align: right; font-weight: bold; ">
+                                        <label for="subject" class="form-label">タイトル</label>
+                                        <span class="badge bg-danger" style="margin-left: 5px;">必須</span>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control" name="subject" id="subject" placeholder="タイトルを入力してください。"
+                                               aria-label="Username" aria-describedby="addon-wrapping"
+                                               style="margin-bottom: 15px; "
+                                               value="{{ form.subject.value|default_if_none:'' }}">
+                                        <span id="titleError" class="error-message" style="color: red;"></span>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 15px;">
+                                    <div class="col-3" style="text-align: right;font-weight: bold;height: 53px; ">
+                                        <label>公開方式</label>
+                                        <span class="badge bg-danger" style="margin-left: 5px;">必須</span>
+                                    </div>
+                                    <div class="col-8" style="margin-bottom: 15px; margin-left:20px;">
+                                        <div class="row">
+                                            {% for value, label in form.public_method.field.choices %}
+                                            <div class="col-3">
+                                                <input class="form-check-input" type="radio" id="public_method_{{ forloop.counter }}" name="public_method"
+                                                       value="{{ value }}" {% if form.public_method.value == value %}checked{% endif %}>
+                                                <label for="public_method_{{ forloop.counter }}" style="margin-right: 15px; ">{{ label }}</label>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" id="issued_date-group" style="margin-top: 15px;">
+                                    <div class="col-3" style="text-align: right; font-weight: bold; ">
+                                        <label for="issued_date">発信日</label>
+                                        <span class="badge bg-danger" style="margin-left: 5px;">必須</span>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" id="issued_date" name="issued_date"
+                                               class="form-control datetimepicker" placeholder="発信日を入力してください。"
+                                               aria-label="Username" aria-describedby="addon-wrapping"
+                                               style="margin-bottom: 15px; "
+                                               value="{{ form.issued_date.value|date:'Y-m-d H:i' }}">
+                                        <span id="issued_dateError" class="error-message" style="color: red;"></span>
+                                    </div>
+                                </div>
+                                <div class="row" id="expiry_date-group" style="margin-top: 15px;">
+                                    <div class="col-3" style="text-align:right; font-weight:bold; ">
+                                        <label for="expiry_date">満了日</label>
+                                    </div>
+                                    <div class="col-8">
+                                        <input type="text" class="form-control datetimepicker" id="expiry_date" name="expiry_date"
+                                               placeholder="満了日を入力してください。" aria-label="Username" aria-describedby="addon-wrapping"
+                                               style="margin-bottom: 15px; "
+                                               value="{{ form.expiry_date.value|date:'Y-m-d H:i' }}">
+                                    </div>
+                                </div>
+                                <div class="row" id="push" style="margin-top: 15px;">
+                                    <div class="col-3" style="text-align: right;font-weight: bold;height: 53px; ">
+                                        <label>プッシュ通知有無</label>
+                                        <span class="badge bg-danger" style="margin-left: 5px;">必須</span>
+                                    </div>
+                                    <div class="col-8" style="margin-bottom: 15px; margin-left:20px;">
+                                        <div class="row">
+                                            {% for value, label in form.push.field.choices %}
+                                            <div class="col-3">
+                                                <input class="form-check-input" type="radio" id="push_{{ forloop.counter }}" name="push"
+                                                       value="{{ value }}" {% if form.push.value == value %}checked{% endif %}>
+                                                <label for="push_{{ forloop.counter }}" >{{ label }}</label>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 15px;">
+                                    <div class="col-3" style="text-align: right; font-weight: bold; ">
+                                        {{ form.content.label_tag }}
+                                        <span class="badge bg-danger" style="margin-left: 5px;">必須</span>
+                                    </div>
+                                    <div class="col-8">
+                                        <textarea class="form-control" name="content" id="content"
+                                                  style="margin-bottom: 15px;"
+                                                  rows="10" placeholder="内容を入力してください。" >{{ form.content.value|default_if_none:'' }}</textarea>
+                                    </div>
+                                </div>
+                                <div class="lg-btn" style="text-align: center; margin-top: 30px;">
+                                    <button type="submit" class="btn btn-outline-danger">登録</button>
+                                    <button type="button" class="btn btn-outline-secondary" onclick="location.href='{% url 'pybo:index' %}'">キャンセル</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+<script>
+jQuery(document).ready(function ($) {
+        $('#issued_date, #expiry_date').datetimepicker({
+            format: 'Y-m-d H:i',
+            step: 30,
+            minDate: 0,
+            timepicker: true,
+            lang: 'ja',
+        });
+
+        // 저장된 값을 확인하고 기본값을 설정
+        var defaultPublicMethod = $('input[name="public_method"]').filter(':checked').val();
+        if (!defaultPublicMethod) {
+            defaultPublicMethod = 'time'; // 기본값
+        }
+        $('input[name="public_method"][value="' + defaultPublicMethod + '"]').prop('checked', true);
+
+        // 표시 및 유효성 검사를 조정
+        updateFieldsBasedOnPublicMethod(defaultPublicMethod);
+
+        $('input[name="public_method"]').change(function (event) {
+            var public_method = $(this).val();
+            updateFieldsBasedOnPublicMethod(public_method);
+        });
+
+        function updateFieldsBasedOnPublicMethod(public_method) {
+            if (public_method === 'time') {
+                $('#issued_date-group').show();
+                $('#push').show();
+                $('#expiry_date-group').show();
+                $("#issued_date").prop('required', true);  // JavaScript에서 필수로 설정
+                $("input[name='push']").prop('required', true);
+                if ($('#issued_date').val() === "") {
+                    $("#issued_dateError").text("発信日を入力してください");
+                } else {
+                    $("#issued_dateError").text(""); // 오류 메시지 클리어
+                }
+            } else if (public_method === 'immediate') {
+                $('#issued_date-group').hide();
+                $('#push').show();
+                $('#expiry_date-group').show();
+                $("#issued_date").prop('required', false);
+                $("input[name='push']").prop('required', true);
+            } else if (public_method === 'hold') {
+                $('#issued_date-group').hide();
+                $('#push').hide();
+                $('#expiry_date-group').hide();
+                $("#issued_date").prop('required', false);
+                $("input[name='push']").prop('required', false);
+            }
+        }
+
+        function confirmSubmit() {
+            return confirm('ご登録なさいますか？');
+        }
+    });
+</script>
+</body>
+
+{% endblock %}

@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="ja">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+    <!-- jQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- DateTimePicker CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css"
+        rel="stylesheet">
+    <!-- DateTimePicker JS -->
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.js"></script>
+
+    <title>人材新規登録画面</title>
+    <link rel="icon" href="https://www.gngs.co.jp/img/top/logo_about.png" type="image/png">
+
+</head>
+
+<body>
+    <form id="notification-form" method="post" action="{% url 'regist' %}" onsubmit="return validateForm()" name="notice">
+        <div class="card" style="width: 90%;margin-left: 64px; margin-right: 64px;">
+            <div class="card-body">
+                <p class="h4" style="text-align: center;">
+                    基本情報
+                </p>
+                <div class="container">
+                    <div class="row" style="margin-top: 15px;">
+                        <div class="col-2" style="text-align: right; font-weight: bold;">
+                            <label for="title">タイトル</label>
+                        </div>
+                        <div class="col-1" style="text-align: center;">
+                            <span class="badge bg-danger">必須</span>
+                        </div>
+                        <div class="col-9">
+                            <div class="input-group flex-nowrap">
+                                <input type="text" id="title" name="title" class="form-control"
+                                    placeholder="タイトルを入力してください。" aria-label="Username"
+                                    aria-describedby="addon-wrapping" style="margin-bottom: 15px;">
+                            </div>
+                            <span id="titleError" class="error-message" style="color: red;"></span>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 15px;">
+                        <div class="col-2" style="text-align: right;font-weight: bold;height: 53px;">
+                            <label>公開方式</label>
+                            <span class="badge bg-danger" style="margin-left: 5px;">必須</span>
+                        </div>
+                        <div class="col-9" style="margin-bottom: 15px;">
+                            <input class="form-check-input" type="radio" id="time" name="publication_method"
+                                value="time" required checked>
+                            <label for="time" style="margin-right: 15px;">時刻公開</label>
+
+                            <input class="form-check-input" type="radio" id="immediate"
+                                name="publication_method" value="immediate" required>
+                            <label for="immediate" style="margin-right: 15px;">すぐ公開</label>
+
+                            <input class="form-check-input" type="radio" id="hold" name="publication_method"
+                                value="hold" required>
+                            <label for="hold" style="margin-right: 15px;">保留</label>
+                        </div>
+                    </div>
+                    <div class="row" id="issued_date-group" style="margin-top: 15px;">
+                        <div class="col-2" style="text-align: right; font-weight: bold;">
+                            <label for="issued_date">発信日</label>
+                            <span class="badge bg-danger" style="margin-left: 5px;">必須</span>
+                        </div>
+                        <div class="col-9">
+                            <div class="input-group flex-nowrap">
+                                <input type="text" id="issued_date" name="issued_date"
+                                    class="form-control datetimepicker" placeholder="発信日を入力してください。"
+                                    aria-label="Username" aria-describedby="addon-wrapping"
+                                    style="margin-bottom: 15px;">
+                            </div>
+                            <span id="issued_dateError" class="error-message" style="color: red;"></span>
+                        </div>
+                    </div>
+                    <div class="row" id="expiry_date-group" style="margin-top: 15px;">
+                        <div class="col-2" style="text-align: right; font-weight: bold;">
+                            <label for="expiry_date">満了日</label>
+                        </div>
+                        <div class="col-1" style="text-align: center;">
+                        </div>
+                        <div class="col-9">
+                            <div class="input-group flex-nowrap">
+                                <input type="text" class="form-control datetimepicker" id="expiry_date"
+                                    name="expiry_date" placeholder="満了日を入力してください。" aria-label="Username"
+                                    aria-describedby="addon-wrapping" style="margin-bottom: 15px;">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" id="push" style="margin-top: 15px;">
+                        <div class="col-2" style="text-align: right;font-weight: bold;height: 53px;">
+                            <label>通知有無</label>
+                            <span class="badge bg-danger" style="margin-left: 5px;">必須</span>
+                        </div>
+                        <div class="col-9" style="margin-bottom: 15px;">
+                            <input class="form-check-input" type="radio" id="push-on" name="push"
+                                value="push-on" required>
+                            <label for="push-on" style="margin-right: 15px;">通知する</label>
+                            <input class="form-check-input" type="radio" id="push-off" name="push"
+                                value="push-off" required checked>
+                            <label for="push-off" style="margin-right: 15px;">通知しない</label><br>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 15px;">
+                        <div class="col-2" style="text-align: right; font-weight: bold;">
+                            <label for="content">内容</label>
+                        </div>
+                        <div class="col-1" style="text-align: center;">
+                            <span class="badge bg-danger">必須</span>
+                        </div>
+                        <div class="col-9">
+                            <div class="mb-3">
+                                <textarea class="form-control" id="content" name="content"
+                                    placeholder="内容を入力してください。" rows="3"></textarea>
+                            </div>
+                            <span id="contentError" class="error-message" style="color: red;"></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div><br>
+        <div class="container"
+            style="text-align: center; display: grid;grid-auto-columns: 125px;grid-auto-flow: column;gap: 1rem;width: fit-content;">
+            <button type="submit" class="btn btn-primary btn-lg">登録</button>
+            <button type="submit" class="btn btn-secondary btn-lg" onclick="formReset()">キャンセル</button>
+        </div>
+    </form>
+    <script>
+    $(document).ready(function () {
+        $('#issued_date, #expiry_date').datetimepicker({
+            format: 'Y/m/d H:i',
+            step: 30,
+            minDate: 0,
+            timepicker: true,
+            lang: 'ja',
+        });
+
+        // Show/hide fields based on publication_method option selected
+        $('input[name="publication_method"]').change(function () {
+            var publication_method = $(this).val();
+            if (publication_method === 'time') {
+                $('#issued_date-group').show();
+                $('#push').show();
+                $('#expiry_date-group').show();
+                // 以下の行を追加して、発信日が必須になる
+                //$("#issued_date").prop('required', true);
+                // 以下の行を追加して、通知の有無が必須になる
+                $("input[name='notification']").prop('required', true);
+                if (issued_date === "") {
+                    $("#issued_dateError").text("ER-2 : 発信日を入力してください");
+                    event.preventDefault(); // フォーム送信を停止
+                } else {
+                    $("#issued_dateError").text(""); // エラーメッセージをクリア
+                }
+            } else if (publication_method === 'immediate') {
+                $('#issued_date-group').hide();
+                $('#push').show();
+                $('#expiry_date-group').show();
+                // 以下の行を追加して、発信日は必須ではなくなる
+                $("#issued_date").prop('required', false);
+                // 以下の行を追加して、通知の有無が必須になる
+                $("input[name='notification']").prop('required', true);
+            } else if (publication_method === 'hold') {
+                $('#issued_date-group').hide();
+                $('#push').hide();
+                $('#expiry_date-group').hide();
+                // 以下の行を追加して、発信日は必須ではなくなる
+                $("#issued_date").prop('required', false);
+                // 以下の行を追加して、通知の有無は必須ではなくなる
+                $("input[name='push']").prop('required', false);
+            }
+        });
+
+    });
+    </script>
+</body>
+
+</html>

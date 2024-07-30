@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block content %}
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+     <div class="container-fluid">
+          <div class="collapse navbar-collapse" id="navbarNav">
+               <ul class="nav nav-underline">
+                   <li class="nav-item">
+                       <a class="nav-link" aria-current="page" href="{% url 'pybo:question_create' %}">お知らせ登録</a> <!--공지 등록-->
+                   </li>
+               </ul>
+          </div>
+     </div>
+</nav>
+<div class="row" style="height: 100%" >
+    <div class="col-2">
+        <ul class="nav flex-column nav-pills nav-fill">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#" style="background-color: transparent; color: inherit; border: none;">お知らせ一覧</a> <!--공지 목록-->
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'pybo:question_create' %}" style="background-color: transparent; color: inherit; border: none;">お知らせ登録</a> <!--공지 등록-->
+            </li>
+        </ul>
+    </div>
+    <div class="col-10" style=" background-color: #F5F5DC; " >
+        <div class="container">
+            <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                      <li class="breadcrumb-item"><a href="{% url 'pybo:index' %}">ホーム</a></li> <!--홈-->
+                      <li class="breadcrumb-item active" aria-current="page">お知らせ一覧</li> <!--공지 목록-->
+                  </ol>
+            </nav>
+            <table class="table">
+                <thead>
+                    <tr class="text-center table-dark">
+                        <th>no</th>
+                        <th style="width:30%">タイトル</th>
+                        <th>公開方式</th>
+                        <th>発信日</th>
+                        <th>満了日</th>
+                        <th>通知</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% if question_list %}
+                {% for question in question_list %}
+                <tr class="text-center">
+                    <td>
+                        <!--번호-->
+                        {{ forloop.counter }}
+                    </td>
+                    <td class="text-start">
+                        <a href="{% url 'pybo:detail' question.id %}">{{ question.subject }}</a>
+                        {% if question.answer_set.count > 0 %}
+                        <span class="text-danger small mx-2">{{ question.answer_set.count }}</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center"> <!-- 공개 방식 -->
+                        {% if question.public_method == 'time' %}
+                            <span>時刻公開</span>
+                        {% elif question.public_method == 'immediate' %}
+                            <span>すぐに公開</span>
+                        {% elif question.public_method == 'hold' %}
+                            <span>保留</span>
+                        {% else %}
+                            <span>保留</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ question.issued_date }}</td> <!-- 발신일 -->
+                    <td>{{ question.expiry_date }}</td> <!-- 만료일 -->
+                    <td class="text-center">
+                        {% if question.push == 'push-on' %}
+                            <span>通知する</span>
+                        {% elif question.push == 'push-off' %}
+                            <span>通知しない</span>
+                        {% endif %}
+                    </td> <!-- 통지 여부 -->
+                </tr>
+                {% endfor %}
+                {% else %}
+                <tr>
+                    <td colspan="6">공지사항이 없습니다.</td>
+                </tr>
+                {% endif %}
+                </tbody>
+            </table>
+            <!-- 페이징처리 시작 -->
+            <ul class="pagination justify-content-center">
+                <!-- 이전페이지 -->
+                {% if question_list.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ question_list.previous_page_number }}">이전</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+                </li>
+                {% endif %}
+                <!-- 페이지리스트 -->
+                {% for page_number in question_list.paginator.page_range %}
+                {% if page_number >= question_list.number|add:-5 and page_number <= question_list.number|add:5 %}
+                {% if page_number == question_list.number %}
+                <li class="page-item active" aria-current="page">
+                    <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                </li>
+                {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+                </li>
+                {% endif %}
+                {% endif %}
+                {% endfor %}
+                <!-- 다음페이지 -->
+                {% if question_list.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ question_list.next_page_number }}">다음</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+                </li>
+                {% endif %}
+            </ul>
+            <!-- 페이징처리 끝 -->
+        </div>
+    </div>
+</div>
+{% endblock %}

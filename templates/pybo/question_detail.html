@@ -1,0 +1,146 @@
+{% extends 'base.html' %}
+{% block content %}
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+     <div class="container-fluid">
+          <div class="collapse navbar-collapse" id="navbarNav">
+               <ul class="nav nav-underline">
+                   <li class="nav-item">
+                       <a class="nav-link" aria-current="page" href="{% url 'pybo:question_create' %}">お知らせ登録</a> <!--공지 등록-->
+                   </li>
+               </ul>
+          </div>
+     </div>
+</nav>
+<div class="row">
+    <div class="col-2">
+        <ul class="nav flex-column nav-pills nav-fill">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">お知らせ一覧</a> <!--공지 목록-->
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'pybo:question_create' %}">お知らせ登録</a> <!--공지 등록-->
+            </li>
+        </ul>
+    </div>
+    <div class="col-8">
+        <div class="container">
+            <nav style="--bs-breadcrumb-divider: '>';" aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'pybo:index' %}">ホーム</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">お知らせ詳細</li>
+                </ol>
+            </nav>
+            <div style="text-align:left; margin-top: 30px;">
+                 <div id="current_date" style="margin-top: 50px; text-align: end;">
+                     <script>
+                         date = new Date();
+                         year = date.getFullYear();
+                         month = ('0' + (date.getMonth() + 1)).slice(-2); // 월이 한 자리 수일 때 앞에 0 추가
+                         day = ('0' + date.getDate()).slice(-2);
+                         document.getElementById("current_date").innerHTML = year + "年" + month + "月" + day + "日";
+                     </script>
+                 </div>
+                 <h1>お知らせ詳細</h1><!--공지상세-->
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    <h3 style="text-align: center;">基本情報</h3>
+                    <!-- message 표시 -->
+                    {% if messages %}
+                    <div class="alert alert-danger my-3" role="alert">
+                        {% for message in messages %}
+                        <strong>{{ message.tags }}</strong>
+                        <ul><li>{{ message.message }}</li></ul>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <!-- 질문 -->
+                    <div class="row" style="margin-top:30px;">
+                        <div class="col-1"></div>
+                        <div class="col-2" style="text-align: center; font-weight: bold;">
+                            <label>タイトル</label>
+                        </div>
+                        <div class="col-1"></div>
+                        <div class="col-7">
+                            <label>{{ question.subject }}</label>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:30px;">
+                        <div class="col-1"></div>
+                        <div class="col-2" style="text-align: center; font-weight: bold;">
+                            <label>公開方式</label>
+                        </div>
+                        <div class="col-1"></div>
+                        <div class="col-7">
+                            <label>{{ question.get_public_display }}</label>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:30px;">
+                        <div class="col-1"></div>
+                        <div class="col-2" style="text-align: center; font-weight: bold;">
+                            <label>発信日</label>
+                        </div>
+                        <div class="col-1"></div>
+                        <div class="col-7">
+                            <label>{{ question.issued_date }}</label>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:30px;">
+                        <div class="col-1"></div>
+                        <div class="col-2" style="text-align: center; font-weight: bold;">
+                            <label>満了日</label>
+                        </div>
+                        <div class="col-1"></div>
+                        <div class="col-7">
+                            <label>{{ question.expiry_date }}</label>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:30px;">
+                        <div class="col-1"></div>
+                        <div class="col-2" style="text-align: center; font-weight: bold;">
+                            <label>通知有無</label>
+                        </div>
+                        <div class="col-1"></div>
+                        <div class="col-7">
+                            <label>{{ question.get_push_display }}</label>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top:30px;">
+                        <div class="col-1"></div>
+                        <div class="col-2" style="text-align: center; font-weight: bold;">
+                            <label>内容</label>
+                        </div>
+                        <div class="col-1"></div>
+                        <div class="col-7">
+                            <label>{{ question.content }}</label>
+                        </div>
+                    </div>
+                    </br>
+                </div>
+            </div>
+            <div class="my-3" style="text-align: center;">
+                 {% if request.user == question.author %}
+                 <a href="{% url 'pybo:question_modify' question.id  %}"
+                    class="btn btn-outline-primary">修正</a>
+                 <a href="javascript:void(0)" class="delete btn btn-outline-danger"
+                    data-uri="{% url 'pybo:question_delete' question.id  %}">修正</a>
+                <a href="{% url 'pybo:index' %}"
+                   class="btn btn-outline-secondary">キャンセル</a>
+                 {% endif %}
+            </div>
+            {% endblock %}
+            {% block script %}
+        </div>
+    </div>
+</div>
+<script type='text/javascript'>
+    const delete_elements = document.getElementsByClassName("delete");
+    Array.from(delete_elements).forEach(function(element) {
+         element.addEventListener('click', function() {
+               if(confirm("本当に削除しますか？")) {
+               location.href = this.dataset.uri;
+               };
+         });
+    });
+</script>
+{% endblock %}
